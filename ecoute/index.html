@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Écoutez RLP en direct · PAS DE PUB · QUE DES TUBES</title>
+<meta name="description" content="RLP Radio en direct : PAS DE PUB · QUE DES TUBES. Non-Stop des années 50 à 2000.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+  :root{
+    --or-clair:#FAE2A0; --or:#CDA048; --or-fonce:#966C28;
+    --noir:#0a0a0a; --gris:#1c1c1c; --texte:#ECE2CD; --doux:#9a9080;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(ellipse at 50% 0%, #2a2114 0%, var(--noir) 60%);
+    color:var(--texte);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100vh;padding:24px 16px 32px;text-align:center;
+  }
+  .or{
+    background:linear-gradient(180deg,var(--or-clair) 0%,var(--or) 50%,var(--or-fonce) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .carte{width:100%;max-width:420px}
+  .pochette{
+    position:relative;width:100%;aspect-ratio:1/1;border-radius:22px;overflow:hidden;
+    background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 2px rgba(205,160,72,.35);
+  }
+  .pochette img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s}
+  .direct{
+    position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:8px;
+    background:rgba(0,0,0,.7);border:1px solid rgba(205,160,72,.6);border-radius:30px;
+    padding:6px 12px;font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--or-clair)
+  }
+  .point{width:9px;height:9px;border-radius:50%;background:#e33;box-shadow:0 0 0 0 rgba(238,51,51,.7)}
+  .joue .point{animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(238,51,51,.7)}70%{box-shadow:0 0 0 10px rgba(238,51,51,0)}100%{box-shadow:0 0 0 0 rgba(238,51,51,0)}}
+  .titre{margin-top:22px;min-height:64px}
+  .titre .t{font-size:22px;font-weight:700;line-height:1.25}
+  .titre .a{font-size:17px;color:var(--doux);margin-top:4px}
+  .lecture{
+    margin:22px auto 8px;width:96px;height:96px;border-radius:50%;border:none;cursor:pointer;
+    background:linear-gradient(180deg,var(--or-clair),var(--or) 50%,var(--or-fonce));
+    box-shadow:0 10px 30px rgba(205,160,72,.35), inset 0 2px 0 rgba(255,255,255,.35);
+    display:flex;align-items:center;justify-content:center;transition:transform .15s;
+  }
+  .lecture:active{transform:scale(.95)}
+  .lecture svg{width:40px;height:40px;fill:#0a0a0a}
+  .etat{font-size:14px;color:var(--doux);min-height:20px}
+  .volume{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:14px}
+  .volume svg{width:20px;height:20px;fill:var(--or)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:180px;height:4px;border-radius:4px;
+    background:linear-gradient(90deg,var(--or) var(--v,80%),#3a3a3a var(--v,80%))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--or-clair);border:2px solid var(--or-fonce)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--or-clair);border:2px solid var(--or-fonce)}
+  .claim{margin-top:30px;font-size:clamp(17px,5.6vw,26px);white-space:nowrap;font-weight:900;letter-spacing:.04em;line-height:1.1}
+  .base{margin-top:6px;font-size:15px;color:var(--texte);opacity:.85}
+  .appli{
+    display:inline-block;margin-top:22px;padding:10px 20px;border-radius:30px;text-decoration:none;
+    border:1.5px solid var(--or);color:var(--or-clair);font-size:15px;font-weight:600
+  }
+  .appli:hover{background:rgba(205,160,72,.12)}
+  .pied{margin-top:26px;font-size:12px;color:#6b6457}
+  .pied a{color:#8d8370}
+</style>
+</head>
+<body>
+  <main class="carte">
+    <div class="pochette">
+      <img id="pochette" src="logo-rlp.png" alt="Pochette du titre en cours">
+      <div class="direct"><span class="point"></span>EN DIRECT</div>
+    </div>
+
+    <div class="titre" aria-live="polite">
+      <div class="t or" id="titre">RLP Radio</div>
+      <div class="a" id="artiste">En direct 24 h/24</div>
+    </div>
+
+    <button class="lecture" id="lecture" aria-label="Lecture">
+      <svg id="icone" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+    </button>
+    <div class="etat" id="etat">Appuyez pour écouter</div>
+
+    <div class="volume">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+      <input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume">
+    </div>
+
+    <div class="claim or">PAS DE PUB · QUE DES TUBES</div>
+    <div class="base">Non-Stop des années 50 à 2000</div>
+
+    <a class="appli" href="https://www.rlpradio.fr/appli-rlp" target="_top">📱 Téléchargez l'appli RLP</a>
+
+    <div class="pied"><a href="https://www.rlpradio.fr" target="_top">rlpradio.fr</a></div>
+  </main>
+
+<audio id="audio" preload="none"></audio>
+<script>
+const FLUX = "https://i.streams.ovh/ic/rlp/stream";
+const STATUT = "https://i.streams.ovh/ic/status-json.xsl";
+const POCHETTES = "https://rlpradio.github.io/pochettes/";
+const LOGO = "logo-rlp.png";
+
+const audio = document.getElementById("audio");
+const btn = document.getElementById("lecture");
+const icone = document.getElementById("icone");
+const etat = document.getElementById("etat");
+const vol = document.getElementById("volume");
+const img = document.getElementById("pochette");
+const PLAY = '<path d="M8 5.5v13l11-6.5z"/>';
+const PAUSE = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
+let joue = false;
+
+audio.volume = vol.value / 100;
+vol.addEventListener("input", () => {
+  audio.volume = vol.value / 100;
+  vol.style.setProperty("--v", vol.value + "%");
+});
+
+btn.addEventListener("click", () => {
+  if (!joue) {
+    // on recharge le flux à chaque lecture pour repartir sur le direct
+    audio.src = FLUX + "?t=" + Date.now();
+    etat.textContent = "Connexion…";
+    audio.play().catch(() => { etat.textContent = "Appuyez encore pour écouter"; });
+  } else {
+    audio.pause();
+    audio.removeAttribute("src"); audio.load();
+    regler(false);
+    etat.textContent = "En pause";
+  }
+});
+audio.addEventListener("playing", () => { regler(true); etat.textContent = "Vous écoutez RLP en direct"; });
+audio.addEventListener("waiting", () => { if (joue) etat.textContent = "Chargement…"; });
+audio.addEventListener("error", () => { if (audio.src) { regler(false); etat.textContent = "Le direct ne répond pas, réessayez dans un instant"; } });
+
+function regler(on) {
+  joue = on;
+  icone.innerHTML = on ? PAUSE : PLAY;
+  btn.setAttribute("aria-label", on ? "Pause" : "Lecture");
+  document.body.classList.toggle("joue", on);
+}
+
+// --- Titre en cours et pochette (si le serveur le permet) ---
+function slug(s) {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .toLowerCase().replace(/&/g, " et ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+let dernier = "";
+async function majTitre() {
+  try {
+    const r = await fetch(STATUT, { cache: "no-store" });
+    const j = await r.json();
+    let src = j.icestats && j.icestats.source;
+    if (Array.isArray(src)) src = src.find(x => (x.listenurl || "").includes("/rlp")) || src[0];
+    const brut = (src && (src.title || src.yp_currently_playing)) || "";
+    if (!brut || brut === dernier) return;
+    dernier = brut;
+    let artiste = "", titre = brut;
+    const i = brut.indexOf(" - ");
+    if (i > 0) { artiste = brut.slice(0, i).trim(); titre = brut.slice(i + 3).trim(); }
+    document.getElementById("titre").textContent = titre;
+    document.getElementById("artiste").textContent = artiste || "En direct 24 h/24";
+    const url = artiste ? POCHETTES + slug(artiste + " " + titre) + ".jpg" : LOGO;
+    const essai = new Image();
+    essai.onload = () => { img.src = url; };
+    essai.onerror = () => { img.src = LOGO; };
+    essai.src = url;
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: titre, artist: artiste || "RLP Radio", album: "RLP · PAS DE PUB · QUE DES TUBES",
+        artwork: [{ src: new URL(url, location.href).href, sizes: "512x512", type: "image/jpeg" }]
+      });
+    }
+  } catch (e) { /* pas d'infos : on garde le logo et le claim */ }
+}
+majTitre();
+setInterval(majTitre, 15000);
+</script>
+</body>
+</html>
