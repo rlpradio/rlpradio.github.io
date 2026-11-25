@@ -42,7 +42,8 @@
     background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 2px rgba(205,160,72,.35);
   }
   .pochette img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s}
-  .entete{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:16px}
+  .entete{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:16px}
+  .sous-volume{margin-top:14px}
   .marque{height:clamp(38px,6vh,56px);width:auto;display:block;mix-blend-mode:lighten;
     filter:drop-shadow(0 4px 14px rgba(205,160,72,.25))}
   .direct{
@@ -61,12 +62,13 @@
   .titre .t{font-size:22px;font-weight:700;line-height:1.25}
   .titre .a{font-size:17px;color:var(--doux);margin-top:4px}
   .lecture{
-    margin:14px auto 4px;width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
+    margin:14px auto 4px;width:52px;height:52px;position:relative;border-radius:50%;border:none;cursor:pointer;
     background:linear-gradient(180deg,var(--or-clair),var(--or) 50%,var(--or-fonce));
     box-shadow:0 6px 18px rgba(205,160,72,.35), inset 0 2px 0 rgba(255,255,255,.35);
     display:flex;align-items:center;justify-content:center;transition:transform .15s;
   }
   .lecture:active{transform:scale(.95)}
+  .lecture::before{content:"";position:absolute;inset:-10px;border-radius:50%}
   .lecture svg{width:24px;height:24px;fill:#0a0a0a}
   .etat{font-size:13px;color:var(--doux);min-height:0}
   .etat:empty{display:none}
@@ -76,7 +78,7 @@
     background:linear-gradient(90deg,var(--or) var(--v,80%),#3a3a3a var(--v,80%))}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--or-clair);border:2px solid var(--or-fonce)}
   input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--or-clair);border:2px solid var(--or-fonce)}
-  .claim{margin-top:22px;font-size:clamp(17px,5.6vw,26px);white-space:nowrap;font-weight:900;letter-spacing:.04em;line-height:1.1}
+  .claim{margin-top:0;font-size:clamp(16px,5vw,22px);white-space:nowrap;font-weight:900;letter-spacing:.04em;line-height:1.1}
   .base{margin-top:6px;font-size:15px;color:var(--texte);opacity:.85}
   .appli{
     display:inline-block;margin-top:18px;padding:10px 20px;border-radius:30px;text-decoration:none;
@@ -91,11 +93,10 @@
   <main class="carte">
     <header class="entete">
       <img class="marque" src="logo-lettres.png" alt="RLP">
-      <div class="direct"><span class="point"></span>EN DIRECT</div>
+      <div class="claim or">PAS DE PUB · QUE DES TUBES</div>
     </header>
     <div class="pochette">
       <img id="pochette" src="logo-rlp.png" alt="Pochette du titre en cours">
-      <img class="bug" src="logo-rlp.png" alt="">
     </div>
 
     <div class="titre" aria-live="polite">
@@ -113,8 +114,7 @@
       <input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume">
     </div>
 
-    <div class="claim or">PAS DE PUB · QUE DES TUBES</div>
-    <div class="base">Non-Stop des années 50 à 2000</div>
+    <div class="sous-volume"><div class="direct"><span class="point"></span>EN DIRECT</div></div>
 
     <a class="appli" href="https://www.rlpradio.fr/appli-rlp" target="_top">📱 Téléchargez l'appli RLP</a>
 
