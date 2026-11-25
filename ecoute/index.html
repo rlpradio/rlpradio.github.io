@@ -111,9 +111,13 @@
   </main>
 
 <audio id="audio" preload="none"></audio>
+<div id="cc" hidden>
+  <span id="cc-artiste" class="cc_streaminfo" data-type="trackartist" data-username="rlp"></span>
+  <span id="cc-titre" class="cc_streaminfo" data-type="tracktitle" data-username="rlp"></span>
+  <span id="cc-song" class="cc_streaminfo" data-type="song" data-username="rlp"></span>
+</div>
 <script>
 const FLUX = "https://i.streams.ovh/ic/rlp/stream";
-const STATUT = "https://i.streams.ovh/ic/status-json.xsl";
 const POCHETTES = "https://rlpradio.github.io/pochettes/";
 const LOGO = "logo-rlp.png";
 
@@ -157,41 +161,46 @@ function regler(on) {
   document.body.classList.toggle("joue", on);
 }
 
-// --- Titre en cours et pochette (si le serveur le permet) ---
+// --- Titre en cours et pochette, via le widget Centova (rafraîchi chaque minute) ---
 function slug(s) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "")
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .toLowerCase().replace(/&/g, " et ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
+const ccArtiste = document.getElementById("cc-artiste");
+const ccTitre = document.getElementById("cc-titre");
+const ccSong = document.getElementById("cc-song");
 let dernier = "";
-async function majTitre() {
-  try {
-    const r = await fetch(STATUT, { cache: "no-store" });
-    const j = await r.json();
-    let src = j.icestats && j.icestats.source;
-    if (Array.isArray(src)) src = src.find(x => (x.listenurl || "").includes("/rlp")) || src[0];
-    const brut = (src && (src.title || src.yp_currently_playing)) || "";
-    if (!brut || brut === dernier) return;
-    dernier = brut;
-    let artiste = "", titre = brut;
+function lireCentova() {
+  const vide = t => !t || /loading|chargement|^\s*$/i.test(t);
+  let artiste = (ccArtiste.textContent || "").trim();
+  let titre = (ccTitre.textContent || "").trim();
+  if (vide(artiste) || vide(titre)) {
+    const brut = (ccSong.textContent || "").trim();
+    if (vide(brut)) return;
     const i = brut.indexOf(" - ");
     if (i > 0) { artiste = brut.slice(0, i).trim(); titre = brut.slice(i + 3).trim(); }
-    document.getElementById("titre").textContent = titre;
-    document.getElementById("artiste").textContent = artiste || "En direct 24 h/24";
-    const url = artiste ? POCHETTES + slug(artiste + " " + titre) + ".jpg" : LOGO;
-    const essai = new Image();
-    essai.onload = () => { img.src = url; };
-    essai.onerror = () => { img.src = LOGO; };
-    essai.src = url;
-    if ("mediaSession" in navigator) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: titre, artist: artiste || "RLP Radio", album: "RLP · PAS DE PUB · QUE DES TUBES",
-        artwork: [{ src: new URL(url, location.href).href, sizes: "512x512", type: "image/jpeg" }]
-      });
-    }
-  } catch (e) { /* pas d'infos : on garde le logo et le claim */ }
+    else { artiste = ""; titre = brut; }
+  }
+  const cle = artiste + "|" + titre;
+  if (cle === dernier) return;
+  dernier = cle;
+  document.getElementById("titre").textContent = titre;
+  document.getElementById("artiste").textContent = artiste || "En direct 24 h/24";
+  const url = artiste ? POCHETTES + slug(artiste + " " + titre) + ".jpg" : LOGO;
+  const essai = new Image();
+  essai.onload = () => { img.src = url; };
+  essai.onerror = () => { img.src = LOGO; };
+  essai.src = url;
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: titre, artist: artiste || "RLP Radio", album: "RLP · PAS DE PUB · QUE DES TUBES",
+      artwork: [{ src: new URL(url, location.href).href, sizes: "512x512", type: "image/jpeg" }]
+    });
+  }
 }
-majTitre();
-setInterval(majTitre, 15000);
+new MutationObserver(lireCentova).observe(document.getElementById("cc"), { childList: true, subtree: true, characterData: true });
+setInterval(lireCentova, 5000);
 </script>
+<script src="https://i.streams.ovh:2199/system/streaminfo.js"></script>
 </body>
 </html>
