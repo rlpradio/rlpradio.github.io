@@ -184,8 +184,9 @@ function lireCentova() {
   const cle = artiste + "|" + titre;
   if (cle === dernier) return;
   dernier = cle;
-  document.getElementById("titre").textContent = titre;
-  document.getElementById("artiste").textContent = artiste || "En direct 24 h/24";
+  // l'artiste en haut (or, gras), le titre du morceau en dessous
+  document.getElementById("titre").textContent = artiste || titre;
+  document.getElementById("artiste").textContent = artiste ? titre : "En direct 24 h/24";
   const url = artiste ? POCHETTES + slug(artiste + " " + titre) + ".jpg" : LOGO;
   const essai = new Image();
   essai.onload = () => { img.src = url; };
