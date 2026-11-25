@@ -30,7 +30,7 @@
     color:var(--texte);
     font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-    min-height:100vh;padding:28px 16px 40px;text-align:center;
+    min-height:100vh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px);text-align:center;
   }
   .or{
     background:linear-gradient(180deg,var(--or-clair) 0%,var(--or) 50%,var(--or-fonce) 100%);
@@ -61,15 +61,16 @@
   .titre .t{font-size:22px;font-weight:700;line-height:1.25}
   .titre .a{font-size:17px;color:var(--doux);margin-top:4px}
   .lecture{
-    margin:16px auto 8px;width:96px;height:96px;border-radius:50%;border:none;cursor:pointer;
+    margin:14px auto 4px;width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
     background:linear-gradient(180deg,var(--or-clair),var(--or) 50%,var(--or-fonce));
-    box-shadow:0 10px 30px rgba(205,160,72,.35), inset 0 2px 0 rgba(255,255,255,.35);
+    box-shadow:0 6px 18px rgba(205,160,72,.35), inset 0 2px 0 rgba(255,255,255,.35);
     display:flex;align-items:center;justify-content:center;transition:transform .15s;
   }
   .lecture:active{transform:scale(.95)}
-  .lecture svg{width:40px;height:40px;fill:#0a0a0a}
-  .etat{font-size:14px;color:var(--doux);min-height:20px}
-  .volume{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:14px}
+  .lecture svg{width:24px;height:24px;fill:#0a0a0a}
+  .etat{font-size:13px;color:var(--doux);min-height:0}
+  .etat:empty{display:none}
+  .volume{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:10px}
   .volume svg{width:20px;height:20px;fill:var(--or)}
   input[type=range]{-webkit-appearance:none;appearance:none;width:180px;height:4px;border-radius:4px;
     background:linear-gradient(90deg,var(--or) var(--v,80%),#3a3a3a var(--v,80%))}
@@ -105,7 +106,7 @@
     <button class="lecture" id="lecture" aria-label="Lecture">
       <svg id="icone" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
     </button>
-    <div class="etat" id="etat">Appuyez pour écouter</div>
+    <div class="etat" id="etat"></div>
 
     <div class="volume">
       <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
@@ -157,10 +158,10 @@ btn.addEventListener("click", () => {
     audio.pause();
     audio.removeAttribute("src"); audio.load();
     regler(false);
-    etat.textContent = "En pause";
+    etat.textContent = "";
   }
 });
-audio.addEventListener("playing", () => { regler(true); etat.textContent = "Vous écoutez RLP en direct"; });
+audio.addEventListener("playing", () => { regler(true); etat.textContent = ""; });
 audio.addEventListener("waiting", () => { if (joue) etat.textContent = "Chargement…"; });
 audio.addEventListener("error", () => { if (audio.src) { regler(false); etat.textContent = "Le direct ne répond pas, réessayez dans un instant"; } });
 
