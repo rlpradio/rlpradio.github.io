@@ -29,24 +29,30 @@
     background:radial-gradient(ellipse at 50% 0%, #2a2114 0%, var(--noir) 60%);
     color:var(--texte);
     font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:100vh;padding:40px 16px 48px;text-align:center;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    min-height:100vh;padding:28px 16px 40px;text-align:center;
   }
   .or{
     background:linear-gradient(180deg,var(--or-clair) 0%,var(--or) 50%,var(--or-fonce) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .carte{width:100%;max-width:420px}
+  .carte{width:100%;max-width:420px;margin:auto 0}
   .pochette{
-    position:relative;width:100%;max-width:min(420px,44vh);margin:0 auto;aspect-ratio:1/1;border-radius:22px;overflow:hidden;
+    position:relative;width:100%;max-width:min(420px,38vh);margin:0 auto;aspect-ratio:1/1;border-radius:22px;overflow:hidden;
     background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 2px rgba(205,160,72,.35);
   }
   .pochette img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s}
+  .entete{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:16px}
+  .marque{height:clamp(38px,6vh,56px);width:auto;display:block;mix-blend-mode:lighten;
+    filter:drop-shadow(0 4px 14px rgba(205,160,72,.25))}
   .direct{
-    position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:8px;
-    background:rgba(0,0,0,.7);border:1px solid rgba(205,160,72,.6);border-radius:30px;
-    padding:6px 12px;font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--or-clair)
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(0,0,0,.5);border:1px solid rgba(205,160,72,.5);border-radius:30px;
+    padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--or-clair)
   }
+  .pochette .bug{position:absolute;right:10px;bottom:10px;width:15%;height:auto;border-radius:6px;
+    border:1px solid rgba(205,160,72,.6);opacity:.88;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .pochette img#pochette{position:relative}
   .point{width:9px;height:9px;border-radius:50%;background:#e33;box-shadow:0 0 0 0 rgba(238,51,51,.7)}
   .joue .point{animation:pulse 1.6s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(238,51,51,.7)}70%{box-shadow:0 0 0 10px rgba(238,51,51,0)}100%{box-shadow:0 0 0 0 rgba(238,51,51,0)}}
@@ -82,9 +88,13 @@
 </head>
 <body>
   <main class="carte">
+    <header class="entete">
+      <img class="marque" src="logo-lettres.png" alt="RLP">
+      <div class="direct"><span class="point"></span>EN DIRECT</div>
+    </header>
     <div class="pochette">
       <img id="pochette" src="logo-rlp.png" alt="Pochette du titre en cours">
-      <div class="direct"><span class="point"></span>EN DIRECT</div>
+      <img class="bug" src="logo-rlp.png" alt="">
     </div>
 
     <div class="titre" aria-live="polite">
